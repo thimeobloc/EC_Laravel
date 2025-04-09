@@ -15,7 +15,9 @@ class CohortController extends Controller
      * @return Factory|View|Application|object
      */
     public function index() {
-        return view('pages.cohorts.index');
+        $cohorts = Cohort::all(); //recover promotions
+        return view('pages.cohorts.index', compact('cohorts'));
+
     }
 
 

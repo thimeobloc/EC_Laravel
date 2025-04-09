@@ -42,22 +42,33 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @foreach ($cohorts as $cohort)
                                         <tr>
-                                        <td>
-                                            <div class="flex flex-col gap-2">
-                                                <a class="leading-none font-medium text-sm text-gray-900 hover:text-primary"
-                                                   href="{{ route('cohort.show', 1) }}">
-                                                    Promotion B1
-                                                </a>
-                                                <span class="text-2sm text-gray-700 font-normal leading-3">
-                                                    Cergy
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td>2024-2025</td>
-                                        <td>34</td>
-                                    </tr>
+                                            <td>
+                                                <div class="flex flex-col gap-2">
+                                                    <!-- Link to the specific cohort page using its ID -->
+                                                    <a class="leading-none font-medium text-sm text-gray-900 hover:text-primary"
+                                                       href="{{ route('cohort.show', $cohort->id) }}">
+                                                        {{ $cohort->name }}
+                                                    </a>
+                                                    <span class="text-2sm text-gray-700 font-normal leading-3">
+                                                        {{ $cohort->description }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <!-- Format the start and end date using Carbon library -->
+                                                {{ \Carbon\Carbon::parse($cohort->start_date)->format('Y') }} -
+                                                {{ \Carbon\Carbon::parse($cohort->end_date)->format('Y') }}
+                                            </td>
+                                            <td>
+                                                <!-- Show the number of students or 'Not available' if not set -->
+                                                {{ $cohort->students_count ?? 'Non dispo' }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                     </tbody>
+
                                 </table>
                             </div>
                             <div class="card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-gray-600 text-2sm font-medium">
