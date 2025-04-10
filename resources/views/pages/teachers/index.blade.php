@@ -42,8 +42,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>Doe</td>
-                                            <td>John</td>
+                                            @foreach($teachers as $teacher)
+                                                <td>{{ $teacher->last_name }}</td>
+                                                <td>{{ $teacher->first_name }}</td>
                                             <td>
                                                 <div class="flex items-center justify-between">
                                                     <a href="#">
@@ -57,21 +58,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>Joe</td>
-                                            <td>Dohn</td>
-                                            <td>
-                                                <div class="flex items-center justify-between">
-                                                    <a href="#">
-                                                        <i class="text-danger ki-filled ki-shield-cross"></i>
-                                                    </a>
-                                                    <a class="hover:text-primary cursor-pointer" href="#"
-                                                       data-modal-toggle="#student-modal">
-                                                        <i class="ki-filled ki-cursor"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
