@@ -50,8 +50,8 @@
                                         <tr>
                                             @foreach($students as $student)
                                             <td>{{ $student->last_name }}</td>
-                                            <td>{{ $student->first_name }}</td>
-                                            <td>{{ $student->birth_date }}</td>
+                                            <td>{{ $student->start_date }}</td>
+                                            <td>{{ $student->end_date }}</td>
                                             <td>
                                                 <div class="flex items-center justify-between">
                                                     <a href="#">

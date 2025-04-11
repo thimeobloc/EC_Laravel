@@ -45,6 +45,13 @@ Route::middleware('auth')->group(function () {
 
         // Common life
         Route::get('common-life', [CommonLifeController::class, 'index'])->name('common-life.index');
+
+
+        Route::get('resources/pages/cohorts/index', [CohortController::class, 'index'])->name('cohorts.index');
+        Route::get('resources/pages/students/index', [StudentController::class, 'index'])->name('students.index');
+        Route::get('resources/pages/teachers/index', [TeacherController::class, 'index'])->name('teachers.index');
+        Route::get('resources/pages/groups/index', [GroupController::class, 'index'])->name('groups.index');
+
     });
 
 });
