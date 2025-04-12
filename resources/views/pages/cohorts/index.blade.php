@@ -23,7 +23,7 @@
                                     <tr>
                                         <th class="min-w-[280px]">
                                             <span class="sort asc">
-                                                 <span class="sort-label">Promotion</span>
+                                                 <span class="sort-label">Promotions</span>
                                                  <span class="sort-icon"></span>
                                             </span>
                                         </th>
