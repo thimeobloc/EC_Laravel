@@ -46,20 +46,8 @@ class DashboardController extends Controller
 
     private function teacherIndex()
     {
-        $user = auth()->user();
-
-        $cohorts = $user->cohorts()->latest()->take(3)->get(); // Dernières promotions associées à cet enseignant
-
-        $cohortsCount = $user->cohorts()->count();
-
-        $students = User::whereIn('id', UserSchool::where('role', 'student')->pluck('user_id'))->latest()->take(3)->get();
-        $studentsCount = UserSchool::where('role', 'student')->count();
-
-        $teachers = User::whereIn('id', UserSchool::where('role', 'teacher')->pluck('user_id'))->latest()->take(3)->get();
-        $teachersCount = UserSchool::where('role', 'teacher')->count();
-
-        return view('pages.dashboard.dashboard-admin', compact('cohorts', 'cohortsCount', 'students', 'studentsCount', 'teachers', 'teachersCount'));
+        $cohorts = Cohort::take(3)->get();
+        return view('pages.dashboard.dashboard-admin', compact('cohorts'));
     }
-
 
 }

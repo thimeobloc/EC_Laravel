@@ -63,7 +63,7 @@
                                             </td>
                                             <td>
                                                 <!-- Show the number of students or 'Not available' if not set -->
-                                                {{ $cohort->students_count ?? 'Non dispo' }}
+                                                {{ $cohort->teachers()->count() ?? 'Non dispo' }}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -99,9 +99,9 @@
 
                     <x-forms.input name="description" :label="__('Description')" />
 
-                    <x-forms.input type="date" name="year" :label="__('Début de l\'année')" placeholder="" />
+                    <x-forms.input type="date" name="start_date" :label="__('Début de l\'année')" placeholder="" />
 
-                    <x-forms.input type="date" name="year" :label="__('Fin de l\'année')" placeholder="" />
+                    <x-forms.input type="date" name="end_date" :label="__('Fin de l\'année')" placeholder="" />
 
                     <x-forms.primary-button>
                         {{ __('Valider') }}
