@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('cohort_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cohort_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('cohort_id')->constrained()->onDelete('cascade');
+            $table->string('role')->default('teacher');
             $table->timestamps();
         });
     }
