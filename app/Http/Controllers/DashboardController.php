@@ -24,21 +24,42 @@ class DashboardController extends Controller
     private function adminIndex()
     {
         $cohorts = Cohort::take(3)->get();
-        $userIds = UserSchool::where('role', 'student')->pluck('user_id');
-        $students = User::whereIn('id', $userIds)->take(3)->get();
-        $userIds = UserSchool::where('role', 'teacher')->pluck('user_id');
-        $teachers = User::whereIn('id', $userIds)->take(3)->get();
+        $students = User::whereIn('id', UserSchool::where('role', 'student')->pluck('user_id'))->take(3)->get();
+        $teachers = User::whereIn('id', UserSchool::where('role', 'teacher')->pluck('user_id'))->take(3)->get();
+
+
+        $cohortsCount = Cohort::count();
+        $studentsCount = User::whereIn('id', UserSchool::where('role', 'student')->pluck('user_id'))->count();
+        $teachersCount = User::whereIn('id', UserSchool::where('role', 'teacher')->pluck('user_id'))->count();
+
         return view('pages.dashboard.dashboard-admin', [
             'cohorts' => $cohorts,
             'students' => $students,
             'teachers' => $teachers,
+            'cohortsCount' => $cohortsCount,
+            'studentsCount' => $studentsCount,
+            'teachersCount' => $teachersCount,
         ]);
     }
 
+
+
     private function teacherIndex()
     {
-        $cohorts = Cohort::take(3)->get();
-        return view('pages.dashboard.dashboard-admin', compact('cohorts'));
+        $user = auth()->user();
+
+        $cohorts = $user->cohorts()->latest()->take(3)->get(); // Dernières promotions associées à cet enseignant
+
+        $cohortsCount = $user->cohorts()->count();
+
+        $students = User::whereIn('id', UserSchool::where('role', 'student')->pluck('user_id'))->latest()->take(3)->get();
+        $studentsCount = UserSchool::where('role', 'student')->count();
+
+        $teachers = User::whereIn('id', UserSchool::where('role', 'teacher')->pluck('user_id'))->latest()->take(3)->get();
+        $teachersCount = UserSchool::where('role', 'teacher')->count();
+
+        return view('pages.dashboard.dashboard-admin', compact('cohorts', 'cohortsCount', 'students', 'studentsCount', 'teachers', 'teachersCount'));
     }
+
 
 }

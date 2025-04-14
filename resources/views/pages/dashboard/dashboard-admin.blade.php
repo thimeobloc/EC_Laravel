@@ -13,7 +13,7 @@
         <!-- Bloc Promotions -->
         <div class="card h-full">
             <div class="card-header justify-between">
-                <h3 class="card-title">Promotions</h3>
+                <h3 class="card-title">Promotions ({{ $cohortsCount }})</h3>
                 <a href="{{ route('cohorts.index') }}" class="btn btn-sm btn-primary">Gérer</a>
             </div>
             <div class="card-body space-y-4">
@@ -38,7 +38,7 @@
         <!-- Bloc Étudiants -->
         <div class="card h-full">
             <div class="card-header justify-between">
-                <h3 class="card-title">Étudiants</h3>
+                <h3 class="card-title">Étudiants ({{ $studentsCount }})</h3>
                 <a href="{{ route('students.index') }}" class="btn btn-sm btn-primary">Gérer</a>
             </div>
             <div class="card-body space-y-4">
@@ -61,9 +61,10 @@
             </div>
         </div>
 
+        <!-- Bloc Enseignants -->
         <div class="card h-full">
             <div class="card-header justify-between">
-                <h3 class="card-title">Enseignants</h3>
+                <h3 class="card-title">Enseignants ({{ $teachersCount }})</h3>
                 <a href="{{ route('teachers.index') }}" class="btn btn-sm btn-primary">Gérer</a>
             </div>
             <div class="card-body space-y-4">
@@ -89,7 +90,7 @@
         <!-- Bloc Groupes -->
         <div class="card h-full">
             <div class="card-header justify-between">
-                <h3 class="card-title">Groupes</h3>
+                <h3 class="card-title">Groupes (3)</h3>
                 <a href="{{ route('groups.index') }}" class="btn btn-sm btn-primary">Gérer</a>
             </div>
             <div class="card-body space-y-4">
