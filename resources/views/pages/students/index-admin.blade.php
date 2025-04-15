@@ -47,25 +47,25 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @foreach($students as $student)
                                         <tr>
-                                            @foreach($students as $student)
                                             <td>{{ $student->last_name }}</td>
                                             <td>{{ $student->start_date }}</td>
                                             <td>{{ $student->end_date }}</td>
                                             <td>
-                                                <div class="flex items-center justify-between">
+                                                <div class="flex items-center justify-between gap-2">
                                                     <a href="#">
                                                         <i class="text-success ki-filled ki-shield-tick"></i>
                                                     </a>
 
-                                                    <a class="hover:text-primary cursor-pointer" href="#"
-                                                       data-modal-toggle="#student-modal">
-                                                        <i class="ki-filled ki-cursor"></i>
+                                                    <a href="#" class="btn btn-sm btn-primary" data-modal-toggle="#student-modal">
+                                                        Modifier
                                                     </a>
                                                 </div>
                                             </td>
                                         </tr>
-                                        @endforeach
+                                    @endforeach
+                                    <script src="{{ asset('js/modal.js') }}"></script>
                                     </tbody>
                                 </table>
                             </div>
