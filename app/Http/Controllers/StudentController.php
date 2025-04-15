@@ -33,17 +33,20 @@ class StudentController extends Controller
         ]);
     }
 
-
-    private function teacherIndex()
-    {
-        // À implémenter si nécessaire pour un rôle de professeur
-        // Par exemple, tu peux récupérer les étudiants en fonction de la cohorte du professeur
-    }
-
     public function show($id)
     {
         $student = Student::findOrFail($id);
         return response()->json($student);
     }
+
+    public function getForm(User $user)
+    {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Données récupérées avec succès',
+            'user' => $user // On renvoie les données de l'utilisateur en plus du message
+        ]);
+    }
+
 
 }

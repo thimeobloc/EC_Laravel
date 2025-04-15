@@ -10439,11 +10439,14 @@ process.umask = function() { return 0; };
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-/* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
+/* harmony import */ var _custom_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./custom/modal */ "./resources/js/custom/modal.js");
+/* harmony import */ var _custom_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_custom_modal__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
 
 
-window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_1__["default"];
-alpinejs__WEBPACK_IMPORTED_MODULE_1__["default"].start();
+
+window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"];
+alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"].start();
 
 /***/ }),
 
@@ -10459,6 +10462,62 @@ __webpack_require__.r(__webpack_exports__);
 
 window.axios = axios__WEBPACK_IMPORTED_MODULE_0__["default"];
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+/***/ }),
+
+/***/ "./resources/js/custom/modal.js":
+/*!**************************************!*\
+  !*** ./resources/js/custom/modal.js ***!
+  \**************************************/
+/***/ (() => {
+
+// 1. Afficher une alerte au click sur un des boutons de la liste
+function handleClick(event, button) {
+  event.preventDefault();
+  console.log("Bouton cliqué");
+  alert("Bouton enclenché");
+}
+
+// 2. Afficher l'attribut data-route qui est placé sur le bouton
+
+var modalTables = document.querySelectorAll('.table-with-modal');
+modalTables.forEach(function (table, i) {
+  table.addEventListener('click', function (event) {
+    var target = event.target;
+    if (target.classList.contains('btn')) {
+      var route = target.getAttribute('data-route'); // Get the route attribute from the button
+      var modalEl = document.querySelector(target.getAttribute('data-modal')); // Select the modal
+
+      // AJAX call via the route
+      fetch(route).then(function (response) {
+        return response.json();
+      }) // Ensure the response is JSON
+      .then(function (data) {
+        console.log('AJAX response succeeded:', data);
+
+        // Check if the response contains user data
+        if (data.status === 'success' && data.user) {
+          // Fill the modal fields with the user data
+          document.getElementById('student_id').value = data.user.id;
+          document.getElementById('last_name').value = data.user.last_name;
+          document.getElementById('first_name').value = data.user.first_name;
+          document.getElementById('birth_date').value = data.user.birth_date;
+          document.getElementById('email').value = data.user.email;
+
+          // When the call is successful: show the modal
+          var modal = KTModal.getInstance(modalEl); // Get the modal instance
+          modal.show(); // Show the modal
+          console.log('AJAX call completed successfully!');
+        } else {
+          console.error('Error: user not found');
+        }
+      })["catch"](function (error) {
+        console.error('Error during the AJAX call:', error);
+        console.log('The AJAX call failed.');
+      });
+    }
+  });
+});
 
 /***/ }),
 
@@ -10534,6 +10593,18 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
 /******/ 		};
 /******/ 	})();
 /******/ 	

@@ -22,7 +22,7 @@
                     <div class="card-body">
                         <div data-datatable="true" data-datatable-page-size="5">
                             <div class="scrollable-x-auto">
-                                <table class="table table-border" data-datatable-table="true">
+                                <table id="students-table" class="table table-border table-with-modal" data-datatable-table="true">
                                     <thead>
                                     <tr>
                                         <th class="min-w-[135px]">
@@ -58,22 +58,22 @@
                                             <td>{{ $student->first_name ?? 'Information manquante'}}</td>
                                             <td>{{ $student->last_name ?? 'Information manquante'}}</td>
                                             <td>{{ $student->end_date ?? 'Information manquante'}}</td>
-                                            <!-- Promotion en dur -->
-                                            <td>{{ $student->cohorts->first()?->name ?? 'Aucune promotion' }}</td><!-- Remplacez par la promotion que tu veux en dur -->
+                                            <td>{{ $student->cohorts->first()?->name ?? 'Aucune promotion' }}</td>
                                             <td>
                                                 <div class="flex items-center justify-between gap-2">
                                                     <a href="#">
                                                         <i class="text-success ki-filled ki-shield-tick"></i>
                                                     </a>
-
-                                                    <a href="#" class="btn btn-sm btn-primary" data-modal-toggle="#student-modal">
+                                                    <a href="#" class="btn btn-sm btn-primary" data-route="{{ route('student.form.get', $student) }}"
+                                                       data-modal="#student-modal"
+                                                        onclick="handleClick(event, this)">
                                                         Modifier
                                                     </a>
+                                                    <script src="{{ asset('resources/js/custom/modal.js') }}"></script>
                                                 </div>
                                             </td>
                                         </tr>
                                     @endforeach
-                                    <script src="{{ asset('js/modal.js') }}"></script>
                                     </tbody>
                                 </table>
                             </div>
