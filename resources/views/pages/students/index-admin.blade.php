@@ -43,15 +43,22 @@
                                                 <span class="sort-icon"></span>
                                             </span>
                                         </th>
+                                        <th class="min-w-[135px]">
+                                            <span class="sort">
+                                                <span class="sort-label">Promotion</span>
+                                                <span class="sort-icon"></span>
+                                            </span>
+                                        </th>
                                         <th class="w-[70px]"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     @foreach($students as $student)
                                         <tr>
-                                            <td>{{ $student->last_name }}</td>
-                                            <td>{{ $student->start_date }}</td>
-                                            <td>{{ $student->end_date }}</td>
+                                            <td>{{ $student->first_name ?? 'Information manquante'}}</td>
+                                            <td>{{ $student->last_name ?? 'Information manquante'}}</td>
+                                            <td>{{ $student->end_date ?? 'Information manquante'}}</td>
+                                            <td>{{ $student->cohorts->first()?->name ?? 'Aucune promotion' }}</td>
                                             <td>
                                                 <div class="flex items-center justify-between gap-2">
                                                     <a href="#">
