@@ -39,4 +39,11 @@ class StudentController extends Controller
         // À implémenter si nécessaire pour un rôle de professeur
         // Par exemple, tu peux récupérer les étudiants en fonction de la cohorte du professeur
     }
+
+    public function show($id)
+    {
+        $student = Student::findOrFail($id);
+        return response()->json($student);
+    }
+
 }

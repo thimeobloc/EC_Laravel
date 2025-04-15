@@ -58,7 +58,8 @@
                                             <td>{{ $student->first_name ?? 'Information manquante'}}</td>
                                             <td>{{ $student->last_name ?? 'Information manquante'}}</td>
                                             <td>{{ $student->end_date ?? 'Information manquante'}}</td>
-                                            <td>{{ $student->cohorts->first()?->name ?? 'Aucune promotion' }}</td>
+                                            <!-- Promotion en dur -->
+                                            <td>{{ $student->cohorts->first()?->name ?? 'Aucune promotion' }}</td><!-- Remplacez par la promotion que tu veux en dur -->
                                             <td>
                                                 <div class="flex items-center justify-between gap-2">
                                                     <a href="#">
