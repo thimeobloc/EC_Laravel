@@ -10439,9 +10439,10 @@ process.umask = function() { return 0; };
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-/* harmony import */ var _custom_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./custom/modal */ "./resources/js/custom/modal.js");
+/* harmony import */ var _custom_modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./custom/modal.js */ "./resources/js/custom/modal.js");
 /* harmony import */ var _custom_modal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_custom_modal__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
+
 
 
 
@@ -10471,52 +10472,43 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   \**************************************/
 /***/ (() => {
 
-// 1. Afficher une alerte au click sur un des boutons de la liste
-function handleClick(event, button) {
-  event.preventDefault();
-  console.log("Bouton cliqué");
-  alert("Bouton enclenché");
-}
-
-// 2. Afficher l'attribut data-route qui est placé sur le bouton
-
-var modalTables = document.querySelectorAll('.table-with-modal');
-modalTables.forEach(function (table, i) {
-  table.addEventListener('click', function (event) {
-    var target = event.target;
-    if (target.classList.contains('btn')) {
-      var route = target.getAttribute('data-route'); // Get the route attribute from the button
-      var modalEl = document.querySelector(target.getAttribute('data-modal')); // Select the modal
-
-      // AJAX call via the route
-      fetch(route).then(function (response) {
-        return response.json();
-      }) // Ensure the response is JSON
-      .then(function (data) {
-        console.log('AJAX response succeeded:', data);
-
-        // Check if the response contains user data
-        if (data.status === 'success' && data.user) {
-          // Fill the modal fields with the user data
-          document.getElementById('student_id').value = data.user.id;
-          document.getElementById('last_name').value = data.user.last_name;
-          document.getElementById('first_name').value = data.user.first_name;
-          document.getElementById('birth_date').value = data.user.birth_date;
-          document.getElementById('email').value = data.user.email;
-
-          // When the call is successful: show the modal
-          var modal = KTModal.getInstance(modalEl); // Get the modal instance
-          modal.show(); // Show the modal
-          console.log('AJAX call completed successfully!');
-        } else {
-          console.error('Error: user not found');
+document.addEventListener('DOMContentLoaded', function () {
+  var modalTables = document.querySelectorAll('.table-with-modal');
+  modalTables.forEach(function (table) {
+    table.addEventListener('click', function (event) {
+      var target = event.target;
+      if (target.classList.contains('btn')) {
+        var route = target.getAttribute('data-route');
+        var modalSelector = target.getAttribute('data-modal');
+        var modalEl = document.querySelector(modalSelector);
+        if (!modalEl) {
+          console.error("Le modal ".concat(modalSelector, " est introuvable."));
+          return;
         }
-      })["catch"](function (error) {
-        console.error('Error during the AJAX call:', error);
-        console.log('The AJAX call failed.');
-      });
-    }
+        fetch(route).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          if (data.status === 'success' && data.user) {
+            fillModalForm(data.user);
+            var modal = KTModal.getInstance(modalEl);
+            modal.show();
+          } else {
+            console.error('Erreur : utilisateur non trouvé');
+          }
+        })["catch"](function (error) {
+          console.error('Erreur AJAX :', error);
+        });
+      }
+    });
   });
+  function fillModalForm(user) {
+    var _user$id, _user$last_name, _user$first_name, _user$birth_date, _user$email;
+    document.getElementById('student_id').value = (_user$id = user.id) !== null && _user$id !== void 0 ? _user$id : '';
+    document.getElementById('last_name').value = (_user$last_name = user.last_name) !== null && _user$last_name !== void 0 ? _user$last_name : '';
+    document.getElementById('first_name').value = (_user$first_name = user.first_name) !== null && _user$first_name !== void 0 ? _user$first_name : '';
+    document.getElementById('birth_date').value = (_user$birth_date = user.birth_date) !== null && _user$birth_date !== void 0 ? _user$birth_date : '';
+    document.getElementById('email').value = (_user$email = user.email) !== null && _user$email !== void 0 ? _user$email : '';
+  }
 });
 
 /***/ }),
