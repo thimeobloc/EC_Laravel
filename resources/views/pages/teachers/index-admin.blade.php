@@ -41,10 +41,10 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            @foreach($teachers as $teacher)
-                                                <td>{{ $teacher->last_name }}</td>
-                                                <td>{{ $teacher->first_name }}</td>
+                                    <tr>
+                                        @foreach($teachers as $teacher)
+                                            <td>{{ $teacher->last_name }}</td>
+                                            <td>{{ $teacher->first_name }}</td>
                                             <td>
                                                 <div class="flex items-center justify-between">
                                                     <a href="#">
@@ -52,13 +52,13 @@
                                                     </a>
 
                                                     <a class="hover:text-primary cursor-pointer" href="#"
-                                                       data-modal-toggle="#student-modal">
+                                                       data-modal-toggle="#teacher-modal">
                                                         <i class="ki-filled ki-cursor"></i>
                                                     </a>
                                                 </div>
                                             </td>
-                                        </tr>
-                                        @endforeach
+                                    </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -86,13 +86,11 @@
                     </h3>
                 </div>
                 <div class="card-body flex flex-col gap-5">
-                    Formulaire à créer
-                    <!-- @todo A compléter -->
+                    <!-- Formulaire à créer -->
+                    @include('pages.teachers.teacher-modal')
                 </div>
             </div>
         </div>
     </div>
     <!-- end: grid -->
 </x-app-layout>
-
-@include('pages.teachers.teacher-modal')
