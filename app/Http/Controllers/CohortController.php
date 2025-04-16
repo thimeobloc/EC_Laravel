@@ -33,10 +33,12 @@ class CohortController extends Controller
     // Displays the details of a specific cohort (and its students)
     public function show(Cohort $cohort) {
         $students = $cohort->students; // Get the students associated with the cohort
+        $teachers = $cohort->teachers; // Get the teachers associated with the cohort
 
         return view('pages.cohorts.show', [
             'cohort' => $cohort,
-            'students' => $students
+            'students' => $students,
+            'teachers' => $teachers // Pass the teachers to the view
         ]);
     }
 }

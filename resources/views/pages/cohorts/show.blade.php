@@ -103,7 +103,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach ($cohort->teachers as $teacher) <!-- Afficher les enseignants -->
+                                    @foreach ($teachers as $teacher) <!-- Afficher les enseignants -->
                                     <tr>
                                         <td>{{ $teacher->last_name }}</td>
                                         <td>{{ $teacher->first_name }}</td>
@@ -134,17 +134,26 @@
             </div>
         </div>
 
+        <!-- Ajout étudiant et enseignant dans le même bloc -->
         <div class="lg:col-span-1">
             <div class="card h-full">
                 <div class="card-header">
                     <h3 class="card-title">
-                        Ajouter un étudiant à la promotion
+                        Ajouter un étudiant ou un enseignant à la promotion
                     </h3>
                 </div>
                 <div class="card-body flex flex-col gap-5">
+                    <!-- Ajouter un étudiant -->
                     <x-forms.dropdown name="user_id" :label="__('Etudiant')">
                         @foreach ($students as $student)
                             <option value="{{ $student->id }}">{{ $student->last_name }} {{ $student->first_name }}</option>
+                        @endforeach
+                    </x-forms.dropdown>
+
+                    <!-- Ajouter un enseignant -->
+                    <x-forms.dropdown name="teacher_id" :label="__('Enseignant')">
+                        @foreach ($teachers as $teacher)
+                            <option value="{{ $teacher->id }}">{{ $teacher->last_name }} {{ $teacher->first_name }}</option>
                         @endforeach
                     </x-forms.dropdown>
 
@@ -154,6 +163,13 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-4 mt-6">
+        <h1 class="text-xl font-semibold">{{ $cohort->name }}</h1>
+        <button id="deleteButton" class="bg-red-600 text-white py-2 px-6 rounded-lg border-2 border-red-600 hover:bg-red-700 transition duration-300 ease-in-out transform hover:scale-105">
+            Supprimer la promotion
+        </button>
     </div>
     <!-- end: grid -->
 </x-app-layout>
