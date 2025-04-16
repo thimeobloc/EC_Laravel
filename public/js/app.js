@@ -10501,13 +10501,50 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
+
+  // Remplir les champs du modal avec les données reçues
   function fillModalForm(user) {
-    var _user$id, _user$last_name, _user$first_name, _user$birth_date, _user$email;
-    document.getElementById('student_id').value = (_user$id = user.id) !== null && _user$id !== void 0 ? _user$id : '';
-    document.getElementById('last_name').value = (_user$last_name = user.last_name) !== null && _user$last_name !== void 0 ? _user$last_name : '';
-    document.getElementById('first_name').value = (_user$first_name = user.first_name) !== null && _user$first_name !== void 0 ? _user$first_name : '';
-    document.getElementById('birth_date').value = (_user$birth_date = user.birth_date) !== null && _user$birth_date !== void 0 ? _user$birth_date : '';
-    document.getElementById('email').value = (_user$email = user.email) !== null && _user$email !== void 0 ? _user$email : '';
+    document.getElementById('student_id').value = user.id;
+    document.getElementById('first_name').value = user.first_name || '';
+    document.getElementById('last_name').value = user.last_name || '';
+    document.getElementById('email').value = user.email || '';
+    document.getElementById('birth_date').value = user.birth_date || '';
+  }
+
+  // Soumission du formulaire via AJAX (PUT)
+  var updateButton = document.getElementById('update-student');
+  if (updateButton) {
+    updateButton.addEventListener('click', function () {
+      var id = document.getElementById('student_id').value;
+      console.log(id);
+      var formData = {
+        first_name: document.getElementById('first_name').value,
+        last_name: document.getElementById('last_name').value,
+        email: document.getElementById('email').value,
+        birth_date: document.getElementById('birth_date').value
+      };
+      fetch("/students/".concat(id), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify(formData) // ✅ Ici on utilise formData
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.status === 'success') {
+          console.log('Étudiant mis à jour avec succès');
+          var modal = KTModal.getInstance(document.getElementById('student-modal'));
+          modal.hide();
+          location.reload();
+        } else {
+          console.error('Échec de la mise à jour de l’étudiant');
+        }
+      })["catch"](function (error) {
+        console.error('Erreur lors de la mise à jour :', error);
+      });
+    });
   }
 });
 
