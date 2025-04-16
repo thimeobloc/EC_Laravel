@@ -10473,21 +10473,31 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /***/ (() => {
 
 document.addEventListener('DOMContentLoaded', function () {
+  // Select all tables with modal functionality
   var modalTables = document.querySelectorAll('.table-with-modal');
+
+  // Loop through each table to add a click event listener
   modalTables.forEach(function (table) {
     table.addEventListener('click', function (event) {
       var target = event.target;
+
+      // Check if the clicked element is a button
       if (target.classList.contains('btn')) {
         var route = target.getAttribute('data-route');
         var modalSelector = target.getAttribute('data-modal');
         var modalEl = document.querySelector(modalSelector);
+
+        // If modal element doesn't exist, log an error
         if (!modalEl) {
           console.error("Le modal ".concat(modalSelector, " est introuvable."));
           return;
         }
+
+        // Fetch data from the route URL
         fetch(route).then(function (response) {
           return response.json();
         }).then(function (data) {
+          // If the response is successful, fill the modal form
           if (data.status === 'success' && data.user) {
             fillModalForm(data.user);
             var modal = KTModal.getInstance(modalEl);
@@ -10496,13 +10506,14 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Erreur : utilisateur non trouvé');
           }
         })["catch"](function (error) {
+          // Handle any AJAX errors
           console.error('Erreur AJAX :', error);
         });
       }
     });
   });
 
-  // Remplir les champs du modal avec les données reçues
+  // Function to fill the modal form with the received user data
   function fillModalForm(user) {
     document.getElementById('student_id').value = user.id;
     document.getElementById('first_name').value = user.first_name || '';
@@ -10511,28 +10522,33 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('birth_date').value = user.birth_date || '';
   }
 
-  // Soumission du formulaire via AJAX (PUT)
+  // Submit the form via AJAX (PUT request)
   var updateButton = document.getElementById('update-student');
   if (updateButton) {
     updateButton.addEventListener('click', function () {
       var id = document.getElementById('student_id').value;
       console.log(id);
+
+      // Gather the form data
       var formData = {
         first_name: document.getElementById('first_name').value,
         last_name: document.getElementById('last_name').value,
         email: document.getElementById('email').value,
         birth_date: document.getElementById('birth_date').value
       };
+
+      // Send the form data via AJAX (POST method)
       fetch("/students/".concat(id), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
         },
-        body: JSON.stringify(formData) // ✅ Ici on utilise formData
+        body: JSON.stringify(formData) // ✅ Here we use formData
       }).then(function (response) {
         return response.json();
       }).then(function (data) {
+        // If successful, close the modal and reload the page
         if (data.status === 'success') {
           console.log('Étudiant mis à jour avec succès');
           var modal = KTModal.getInstance(document.getElementById('student-modal'));
@@ -10542,6 +10558,7 @@ document.addEventListener('DOMContentLoaded', function () {
           console.error('Échec de la mise à jour de l’étudiant');
         }
       })["catch"](function (error) {
+        // Handle errors during the update process
         console.error('Erreur lors de la mise à jour :', error);
       });
     });
