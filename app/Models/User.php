@@ -85,8 +85,9 @@ class User extends Authenticatable
 
     public function cohorts()
     {
-        return $this->belongsToMany(Cohort::class, 'cohort_user');
+        return $this->belongsToMany(Cohort::class, 'cohort_user')->withPivot('role');
     }
+
 
 
 //    public function userRole(string $role){

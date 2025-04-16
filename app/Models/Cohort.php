@@ -14,4 +14,17 @@ class Cohort extends Model
         return $this->belongsToMany(User::class, 'cohort_user');
     }
 
+    public function students()
+    {
+        return $this->belongsToMany(User::class, 'cohort_user')
+            ->wherePivot('role', 'student');
+    }
+
+
+    public function teachers()
+    {
+        return $this->belongsToMany(User::class, 'cohort_user')
+            ->wherePivot('role', 'teacher');
+    }
+
 }
