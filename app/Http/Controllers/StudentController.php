@@ -48,6 +48,15 @@ class StudentController extends Controller
         ]);
     }
 
+    public function update(Request $request, $id)
+    {
+        try {
+            $student = Student::findOrFail($id); // Recherche de l'étudiant par ID
+            $student->update($request->all()); // Mise à jour des données
 
-
+            return response()->json(['status' => 'success', 'user' => $student], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
+    }
 }

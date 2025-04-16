@@ -33,11 +33,52 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Remplir les champs du modal avec les données reçues
     function fillModalForm(user) {
-        document.getElementById('student_id').value = user.id ?? '';
-        document.getElementById('last_name').value = user.last_name ?? '';
-        document.getElementById('first_name').value = user.first_name ?? '';
-        document.getElementById('birth_date').value = user.birth_date ?? '';
-        document.getElementById('email').value = user.email ?? '';
+        document.getElementById('student_id').value = user.id;
+        document.getElementById('first_name').value = user.first_name || '';
+        document.getElementById('last_name').value = user.last_name || '';
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('birth_date').value = user.birth_date || '';
     }
+
+    // Soumission du formulaire via AJAX (PUT)
+    const updateButton = document.getElementById('update-student');
+    if (updateButton) {
+        updateButton.addEventListener('click', function () {
+            const id = document.getElementById('student_id').value;
+            console.log(id)
+
+            const formData = {
+                first_name: document.getElementById('first_name').value,
+                last_name: document.getElementById('last_name').value,
+                email: document.getElementById('email').value,
+                birth_date: document.getElementById('birth_date').value
+            };
+
+            fetch(`/students/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify(formData) // ✅ Ici on utilise formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Étudiant mis à jour avec succès');
+                        const modal = KTModal.getInstance(document.getElementById('student-modal'));
+                        modal.hide();
+                        location.reload();
+                    } else {
+                        console.error('Échec de la mise à jour de l’étudiant');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la mise à jour :', error);
+                });
+        });
+    }
+
 });
