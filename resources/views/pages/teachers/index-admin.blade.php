@@ -41,8 +41,8 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        @foreach($teachers as $teacher)
+                                    @foreach($teachers as $teacher)
+                                        <tr>
                                             <td>{{ $teacher->last_name }}</td>
                                             <td>{{ $teacher->first_name }}</td>
                                             <td>
@@ -50,14 +50,13 @@
                                                     <a href="#">
                                                         <i class="text-success ki-filled ki-shield-tick"></i>
                                                     </a>
-
                                                     <a class="hover:text-primary cursor-pointer" href="#"
                                                        data-modal-toggle="#teacher-modal">
                                                         <i class="ki-filled ki-cursor"></i>
                                                     </a>
                                                 </div>
                                             </td>
-                                    </tr>
+                                        </tr>
                                     @endforeach
                                     </tbody>
                                 </table>

@@ -28,10 +28,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/cohorts', [CohortController::class, 'index'])->name('cohort.index');
         Route::get('/cohort/{cohort}', [CohortController::class, 'show'])->name('cohort.show');
         Route::get('/cohorts/{cohort}', [CohortController::class, 'show'])->name('cohorts.show');
+
         // Teachers
-        Route::get('/teachers', [TeacherController::class, 'index'])->name('teacher.index');
-        Route::resource('teachers', TeacherController::class);
-        Route::get('teachers/{teacher}', [TeacherController::class, 'show'])->name('teachers.show');
+        Route::get('/teacher',[TeacherController::class, 'index'])->name('teachers');
 
 
 
