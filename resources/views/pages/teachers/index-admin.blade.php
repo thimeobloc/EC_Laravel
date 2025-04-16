@@ -37,6 +37,24 @@
                                                 <span class="sort-icon"></span>
                                             </span>
                                         </th>
+                                        <th class="min-w-[135px]">
+                                            <span class="sort">
+                                                <span class="sort-label">Email</span>
+                                                <span class="sort-icon"></span>
+                                            </span>
+                                        </th>
+                                        <th class="min-w-[135px]">
+                                            <span class="sort">
+                                                <span class="sort-label">date de naissance</span>
+                                                <span class="sort-icon"></span>
+                                            </span>
+                                        </th>
+                                        <th class="min-w-[135px]">
+                                            <span class="sort">
+                                                <span class="sort-label">modifier</span>
+                                                <span class="sort-icon"></span>
+                                            </span>
+                                        </th>
                                         <th class="w-[70px]"></th>
                                     </tr>
                                     </thead>
@@ -45,6 +63,9 @@
                                         <tr>
                                             <td>{{ $teacher->last_name }}</td>
                                             <td>{{ $teacher->first_name }}</td>
+                                            <td>{{ $teacher->email }}</td>
+                                            <td>{{ $teacher->birth_date}}</td>
+                                            <td><button type="button" class="btn btn-primary openModal" data-id="{{ $teacher->id }}">edit</button></td>
                                             <td>
                                                 <div class="flex items-center justify-between">
                                                     <a href="#">
@@ -93,3 +114,4 @@
     </div>
     <!-- end: grid -->
 </x-app-layout>
+<script src="{{ asset('js/custom/modal-teacher.js') }}"></script>

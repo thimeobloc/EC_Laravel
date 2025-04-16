@@ -31,8 +31,8 @@ Route::middleware('auth')->group(function () {
 
         // Teachers
         Route::get('/teacher',[TeacherController::class, 'index'])->name('teachers');
-
-
+        Route::get('/user/{id}', [TeacherController::class, 'getUserData']);
+        Route::get('/user/{id}', [TeacherController::class, 'getUserData'])->name('user.data');
 
         // Students
         Route::get('students', [StudentController::class, 'index'])->name('student.index');
