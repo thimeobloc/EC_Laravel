@@ -28,6 +28,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/cohorts', [CohortController::class, 'index'])->name('cohort.index');
         Route::get('/cohort/{cohort}', [CohortController::class, 'show'])->name('cohort.show');
         Route::get('/cohorts/{cohort}', [CohortController::class, 'show'])->name('cohorts.show');
+        Route::get('/cohorts/create', [CohortController::class, 'create'])->name('cohorts.create');
+        Route::post('/cohorts', [CohortController::class, 'store'])->name('cohorts.store');
+        Route::delete('/cohorts/{cohort}', [CohortController::class, 'destroy'])->name('cohorts.destroy');
+        Route::post('/cohort-removeUser', [CohortController::class, 'removeUserFromCohort'])->name('cohort.removeUser');
+        Route::post('/cohorts/{cohort}/add-user', [CohortController::class, 'addUserToCohort'])->name('cohorts.addUser');
+
 
         // Teachers
         Route::get('/teacher',[TeacherController::class, 'index'])->name('teachers');
@@ -38,7 +44,7 @@ Route::middleware('auth')->group(function () {
         // Students
         Route::get('students', [StudentController::class, 'index'])->name('student.index');
         Route::get('student/form/{user}', [StudentController::class, 'getForm'])->name('student.form.get');
-        Route::get('students', [StudentController::class, 'index'])->name('student.index');
+
 
 
         // Knowledge

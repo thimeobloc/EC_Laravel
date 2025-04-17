@@ -31,4 +31,8 @@ class Cohort extends Model
         return $this->belongsToMany(User::class, 'cohort_user')
             ->wherePivot('role', 'teacher'); // Filter to only retrieve teachers
     }
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
 }

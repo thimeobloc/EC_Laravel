@@ -1,50 +1,72 @@
 <x-app-layout>
     <x-slot name="header">
-        <!-- Title for the page -->
         <h1 class="text-xl font-semibold text-gray-800">
             {{ __('Promotions') }}
         </h1>
     </x-slot>
 
-    <!-- Grid for displaying cohorts -->
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @foreach($cohorts as $cohort)
             <div class="bg-white shadow rounded-xl p-5 border border-gray-200">
-                <!-- Displaying cohort's name -->
                 <h2 class="text-lg font-semibold text-gray-900">{{ $cohort->name }}</h2>
-                <!-- Displaying the cohort's description -->
                 <p class="text-sm text-gray-600 mb-2">{{ $cohort->description }}</p>
-                <!-- List of cohort details -->
+                <p class="text-sm text-gray-700 mb-2"><strong>École : </strong>{{ $cohort->school->name }}</p>
                 <ul class="text-sm text-gray-700 space-y-1">
                     <li><strong>Année :</strong> {{ \Carbon\Carbon::parse($cohort->start_date)->year }} - {{ \Carbon\Carbon::parse($cohort->end_date)->year }}</li>
                     <li><strong>Étudiants :</strong> {{ $cohort->students()->count() }}</li>
                     <li><strong>Enseignants :</strong> {{ $cohort->teachers()->count() }}</li>
                 </ul>
-                <!-- Link to view more details about the cohort -->
                 <a href="{{ route('cohorts.show', $cohort) }}" class="mt-3 inline-block text-sm text-primary hover:underline">Voir plus</a>
+
+
+                <form action="{{ route('cohorts.destroy', $cohort) }}" method="POST" class="mt-3 inline-block">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-sm text-red-600 hover:text-red-800">Supprimer</button>
+                </form>
             </div>
         @endforeach
     </div>
 
-<!--new cohort-->
 
-    <div>
-        <div class="bg-white shadow rounded-xl border border-gray-200">
-            <div class="p-5 border-b border-gray-100">
-                <!-- Title for the add cohort section -->
-                <h3 class="text-lg font-semibold text-gray-900">Ajouter une promotion</h3>
+
+    <div class="mt-6">
+        <h2 class="text-lg font-semibold text-gray-900">Ajouter une nouvelle promotion</h2>
+        <form action="{{ route('cohorts.store') }}" method="POST" class="space-y-4">
+            @csrf
+            <div>
+                <label for="name" class="block text-sm font-semibold text-gray-700">Nom de la promotion</label>
+                <input type="text" id="name" name="name" class="block w-full mt-1 p-2 border border-gray-300 rounded" required>
             </div>
-            <div class="p-5 flex flex-col gap-4">
-                <!-- Form fields for adding a new cohort -->
-                <x-forms.input name="name" :label="__('Nom')" />
-                <x-forms.input name="description" :label="__('Description')" />
-                <x-forms.input type="date" name="start_date" :label="__('Début de l\'année')" />
-                <x-forms.input type="date" name="end_date" :label="__('Fin de l\'année')" />
-                <!-- Submit button -->
-                <x-forms.primary-button>
-                    {{ __('Valider') }}
-                </x-forms.primary-button>
+
+            <div>
+                <label for="description" class="block text-sm font-semibold text-gray-700">Description</label>
+                <textarea id="description" name="description" class="block w-full mt-1 p-2 border border-gray-300 rounded" required></textarea>
             </div>
-        </div>
+
+            <div>
+                <label for="start_date" class="block text-sm font-semibold text-gray-700">Date de début</label>
+                <input type="date" id="start_date" name="start_date" class="block w-full mt-1 p-2 border border-gray-300 rounded" required>
+            </div>
+
+            <div>
+                <label for="end_date" class="block text-sm font-semibold text-gray-700">Date de fin</label>
+                <input type="date" id="end_date" name="end_date" class="block w-full mt-1 p-2 border border-gray-300 rounded" required>
+            </div>
+
+            <div>
+                <label for="school_id" class="block text-sm font-semibold text-gray-700">Sélectionner l'école</label>
+                <select id="school_id" name="school_id" class="block w-full mt-1 p-2 border border-gray-300 rounded" required>
+                    @foreach($schools as $school)
+                        <option value="{{ $school->id }}">{{ $school->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <button type="submit" class="bg-blue-500 text-white p-2 rounded">Ajouter la promotion</button>
+            </div>
+        </form>
     </div>
 </x-app-layout>

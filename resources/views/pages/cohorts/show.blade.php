@@ -42,29 +42,25 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach ($cohort->students as $student) <!-- Afficher les étudiants -->
-                                    <tr>
-                                        <td>{{ $student->last_name }}</td>
-                                        <td>{{ $student->first_name }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($student->birth_date)->format('d/m/Y') }}</td>
-                                        <td class="cursor-pointer pointer">
-                                            <i class="ki-filled ki-trash"></i>
-                                        </td>
-                                    </tr>
+                                    @foreach ($cohort->students as $student)
+                                        <tr>
+                                            <td>{{ $student->last_name }}</td>
+                                            <td>{{ $student->first_name }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($student->birth_date)->format('d/m/Y') }}</td>
+                                            <td class="cursor-pointer pointer">
+                                                <form action="{{route('cohort.removeUser')}}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur de la promotion ?');">
+                                                    @csrf
+                                                    <input type="hidden" name="user_id" value="{{$student->id}}">
+                                                    <input type="hidden" name="cohort_id" value="{{$cohort->id}}">
+                                                    <button type="submit">
+                                                        <i class="ki-filled ki-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
-                            </div>
-                            <div class="card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-gray-600 text-2sm font-medium">
-                                <div class="flex items-center gap-2 order-2 md:order-1">
-                                    Show
-                                    <select class="select select-sm w-16" data-datatable-size="true" name="perpage"></select>
-                                    per page
-                                </div>
-                                <div class="flex items-center gap-4 order-1 md:order-2">
-                                    <span data-datatable-info="true"></span>
-                                    <div class="pagination" data-datatable-pagination="true"></div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -103,29 +99,25 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach ($teachers as $teacher) <!-- Afficher les enseignants -->
-                                    <tr>
-                                        <td>{{ $teacher->last_name }}</td>
-                                        <td>{{ $teacher->first_name }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($teacher->birth_date)->format('d/m/Y') }}</td>
-                                        <td class="cursor-pointer pointer">
-                                            <i class="ki-filled ki-trash"></i>
-                                        </td>
-                                    </tr>
+                                    @foreach ($cohort->teachers as $teacher)
+                                        <tr>
+                                            <td>{{ $teacher->last_name }}</td>
+                                            <td>{{ $teacher->first_name }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($teacher->birth_date)->format('d/m/Y') }}</td>
+                                            <td class="cursor-pointer pointer">
+                                                <form action="{{route('cohort.removeUser')}}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur de la promotion ?');">
+                                                    @csrf
+                                                    <input type="hidden" name="user_id" value="{{$teacher->id}}">
+                                                    <input type="hidden" name="cohort_id" value="{{$cohort->id}}">
+                                                    <button type="submit">
+                                                        <i class="ki-filled ki-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
-                            </div>
-                            <div class="card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-gray-600 text-2sm font-medium">
-                                <div class="flex items-center gap-2 order-2 md:order-1">
-                                    Show
-                                    <select class="select select-sm w-16" data-datatable-size="true" name="perpage"></select>
-                                    per page
-                                </div>
-                                <div class="flex items-center gap-4 order-1 md:order-2">
-                                    <span data-datatable-info="true"></span>
-                                    <div class="pagination" data-datatable-pagination="true"></div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -143,33 +135,32 @@
                     </h3>
                 </div>
                 <div class="card-body flex flex-col gap-5">
-                    <!-- Ajouter un étudiant -->
-                    <x-forms.dropdown name="user_id" :label="__('Etudiant')">
-                        @foreach ($students as $student)
-                            <option value="{{ $student->id }}">{{ $student->last_name }} {{ $student->first_name }}</option>
-                        @endforeach
-                    </x-forms.dropdown>
+                    <form action="{{ route('cohorts.addUser', $cohort) }}" method="POST">
+                        @csrf
+                        <!-- Ajouter un étudiant -->
+                        <x-forms.dropdown name="user_id" :label="__('Etudiant')">
+                            <option value="">{{ __('Aucun') }}</option>
+                            @foreach ($students as $student)
+                                <option value="{{ $student->id }}">{{ $student->last_name }} {{ $student->first_name }}</option>
+                            @endforeach
+                        </x-forms.dropdown>
 
-                    <!-- Ajouter un enseignant -->
-                    <x-forms.dropdown name="teacher_id" :label="__('Enseignant')">
-                        @foreach ($teachers as $teacher)
-                            <option value="{{ $teacher->id }}">{{ $teacher->last_name }} {{ $teacher->first_name }}</option>
-                        @endforeach
-                    </x-forms.dropdown>
+                        <!-- Ajouter un enseignant -->
+                        <x-forms.dropdown name="teacher_id" :label="__('Enseignant')">
+                            <option value="">{{ __('Aucun') }}</option>
+                            @foreach ($teachers as $teacher)
+                                <option value="{{ $teacher->id }}">{{ $teacher->last_name }} {{ $teacher->first_name }}</option>
+                            @endforeach
+                        </x-forms.dropdown>
 
-                    <x-forms.primary-button>
-                        {{ __('Valider') }}
-                    </x-forms.primary-button>
+                        <x-forms.primary-button>
+                            {{ __('Valider') }}
+                        </x-forms.primary-button>
+                    </form>
+
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="flex justify-between items-center mb-4 mt-6">
-        <h1 class="text-xl font-semibold">{{ $cohort->name }}</h1>
-        <button id="deleteButton" class="bg-red-600 text-white py-2 px-6 rounded-lg border-2 border-red-600 hover:bg-red-700 transition duration-300 ease-in-out transform hover:scale-105">
-            Supprimer la promotion
-        </button>
     </div>
     <!-- end: grid -->
 </x-app-layout>

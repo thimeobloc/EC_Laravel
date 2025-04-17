@@ -14,8 +14,17 @@ class School extends Model
     protected $fillable = ['user_id', 'name', 'description'];
 
     // Many-to-Many relationship with users (the users associated with the school)
-    public function users()
+    public function students()
     {
-        return $this->belongsToMany(User::class, 'users_schools'); // Relationship with the pivot table 'users_schools'
+        return $this->belongsToMany(User::class, 'users_schools')
+            ->withPivot('role') // important pour accéder au champ "role"
+            ->wherePivot('role', 'student');
     }
+
+
+    public function cohorts()
+    {
+        return $this->hasMany(Cohort::class);
+    }
+
 }
