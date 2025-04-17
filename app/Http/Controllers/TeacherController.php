@@ -2,58 +2,96 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cohort;
 use App\Models\User;
 use App\Models\UserSchool;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
 {
-    // This method handles the index route for the teacher dashboard
     public function index()
     {
-        // If the user is not authenticated, redirect them to the login page
         if (!auth()->check()) {
             return redirect()->route('login');
         }
 
-        // Retrieve the user's role from the pivot table
         $userRole = auth()->user()->school()->pivot->role;
 
-        // If the user is an admin, show the admin index page
         if ($userRole == 'admin') {
             return $this->adminIndex();
         }
 
-        // Otherwise, redirect to the home page
         return redirect()->route('home');
     }
 
-    // This method is for showing the admin index page with a list of teachers
     private function adminIndex()
     {
-        // Get all users with the role 'teacher' by looking up the 'UserSchool' pivot table
         $teachers = User::whereIn('id', UserSchool::where('role', 'teacher')->pluck('user_id'))->get();
 
-        // Return the admin index view with the list of teachers
         return view('pages.teachers.index-admin', [
             'teachers' => $teachers,
         ]);
     }
 
-    // This method retrieves the user data by ID
-    public function getUserData($id)
+    public function store(Request $request)
     {
-        // Find the user by ID
-        $user = User::find($id);
-        // If the user is not found, return an error message as JSON with a 404 status code
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+        $request->validate([
+            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'birth_date' => 'nullable|date',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $user = User::create([
+            'last_name' => $request->last_name,
+            'first_name' => $request->first_name,
+            'email' => $request->email,
+            'birth_date' => $request->birth_date,
+            'password' => Hash::make($request->password),
+        ]);
+
+        UserSchool::create([
+            'user_id' => $user->id,
+            'school_id' => auth()->user()->school()->id,
+            'role' => 'teacher',
+        ]);
+
+        return redirect()->back()->with('success', 'Enseignant créé avec succès.');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:6',
+        ]);
+
+        $teacher = User::findOrFail($id);
+
+        $teacher->last_name = $request->last_name;
+        $teacher->first_name = $request->first_name;
+        $teacher->email = $request->email;
+
+        if ($request->filled('password')) {
+            $teacher->password = Hash::make($request->password);
         }
-        // Return the user data as JSON
-        return response()->json($user);
+
+        $teacher->save();
+
+        return redirect()->back()->with('success', 'Enseignant mis à jour avec succès.');
+    }
+
+    public function destroy($id)
+    {
+        $teacher = User::findOrFail($id);
+
+        UserSchool::where('user_id', $teacher->id)->delete();
+
+        $teacher->delete();
+
+        return redirect()->back()->with('success', 'Enseignant supprimé avec succès.');
     }
 }

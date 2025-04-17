@@ -31,8 +31,9 @@ Route::middleware('auth')->group(function () {
 
         // Teachers
         Route::get('/teacher',[TeacherController::class, 'index'])->name('teachers');
-        Route::get('/user/{id}', [TeacherController::class, 'getUserData']);
-        Route::get('/user/{id}', [TeacherController::class, 'getUserData'])->name('user.data');
+        Route::post('/teachers', [TeacherController::class, 'store'])->name('teachers.store');
+        Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
+
 
         // Students
         Route::get('students', [StudentController::class, 'index'])->name('student.index');

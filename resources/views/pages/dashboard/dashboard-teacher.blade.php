@@ -10,12 +10,10 @@
     <!-- begin: grid -->
     <div class="grid lg:grid-cols-2 gap-6 items-start">
 
-        <!-- Bloc Promotions -->
+        <!-- bloc cohort -->
         <div class="card h-full">
             <div class="card-header justify-between">
                 <h3 class="card-title">Promotions ({{ $cohortsCount }})</h3>
-                <!-- Link to manage promotions -->
-                <a href="{{ route('cohorts.index') }}" class="btn btn-sm btn-primary">Gérer</a>
             </div>
             <div class="card-body space-y-4">
                 <p class="text-sm text-gray-600">Dernières promotions ajoutées :</p>
@@ -30,20 +28,13 @@
                         @endforeach
                     @endisset
                 </div>
-
-                <div class="pt-2 text-right">
-                    <!-- Link to view more promotions -->
-                    <a href="{{ route('cohorts.index') }}" class="btn btn-sm btn-outline">Voir plus</a>
-                </div>
             </div>
         </div>
 
-        <!-- Bloc Étudiants -->
+        <!-- Bloc students-->
         <div class="card h-full">
             <div class="card-header justify-between">
                 <h3 class="card-title">Étudiants ({{ $studentsCount }})</h3>
-                <!-- Link to manage students -->
-                <a href="{{ route('students.index') }}" class="btn btn-sm btn-primary">Gérer</a>
             </div>
             <div class="card-body space-y-4">
                 <p class="text-sm text-gray-600">Derniers étudiants ajoutés :</p>
@@ -59,20 +50,13 @@
                         @endforeach
                     @endisset
                 </div>
-
-                <div class="pt-2 text-right">
-                    <!-- Link to view more students -->
-                    <a href="{{ route('students.index') }}" class="btn btn-sm btn-outline">Voir plus</a>
-                </div>
             </div>
         </div>
 
-        <!-- Bloc Enseignants -->
+        <!-- Bloc teachers -->
         <div class="card h-full">
             <div class="card-header justify-between">
                 <h3 class="card-title">Enseignants ({{ $teachersCount }})</h3>
-                <!-- Link to manage teachers -->
-                <a href="{{ route('teachers.index') }}" class="btn btn-sm btn-primary">Gérer</a>
             </div>
             <div class="card-body space-y-4">
                 <p class="text-sm text-gray-600">Derniers enseignants ajoutés :</p>
@@ -88,20 +72,13 @@
                         @endforeach
                     @endisset
                 </div>
-
-                <div class="pt-2 text-right">
-                    <!-- Link to view more teachers -->
-                    <a href="{{ route('teachers.index') }}" class="btn btn-sm btn-outline">Voir plus</a>
-                </div>
             </div>
         </div>
 
-        <!-- Bloc Groupes -->
+        <!-- Bloc Group -->
         <div class="card h-full">
             <div class="card-header justify-between">
                 <h3 class="card-title">Groupes (3)</h3>
-                <!-- Link to manage groups -->
-                <a href="{{ route('groups.index') }}" class="btn btn-sm btn-primary">Gérer</a>
             </div>
             <div class="card-body space-y-4">
                 <p class="text-sm text-gray-600">Derniers groupes créés :</p>
@@ -114,11 +91,6 @@
                             <div class="text-sm text-gray-600">{{ $groupe['count'] }} étudiants</div>
                         </div>
                     @endforeach
-                </div>
-
-                <div class="pt-2 text-right">
-                    <!-- Link to view more groups -->
-                    <a href="{{ route('groups.index') }}" class="btn btn-sm btn-outline">Voir plus</a>
                 </div>
             </div>
         </div>

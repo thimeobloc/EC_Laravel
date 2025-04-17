@@ -72,7 +72,7 @@ class DashboardController extends Controller
         })->count();
 
         // Displays the view (same as the admin but without teachers)
-        return view('pages.dashboard.dashboard-admin', [
+        return view('pages.dashboard.dashboard-teacher', [
             'cohorts' => $cohorts,
             'students' => $students,
             'cohortsCount' => $cohortsCount,

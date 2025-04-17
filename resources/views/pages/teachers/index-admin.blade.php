@@ -45,12 +45,6 @@
                                         </th>
                                         <th class="min-w-[135px]">
                                             <span class="sort">
-                                                <span class="sort-label">date de naissance</span>
-                                                <span class="sort-icon"></span>
-                                            </span>
-                                        </th>
-                                        <th class="min-w-[135px]">
-                                            <span class="sort">
                                                 <span class="sort-label">modifier</span>
                                                 <span class="sort-icon"></span>
                                             </span>
@@ -64,15 +58,20 @@
                                             <td>{{ $teacher->last_name }}</td>
                                             <td>{{ $teacher->first_name }}</td>
                                             <td>{{ $teacher->email }}</td>
-                                            <td>{{ $teacher->birth_date}}</td>
-                                            <td><button type="button" class="btn btn-primary openModal" data-id="{{ $teacher->id }}">edit</button></td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary openModal" data-id="{{ $teacher->id }}">edit</button>
+                                                <form action="{{ route('teachers.destroy', $teacher->id) }}" method="POST" onsubmit="return confirm('Supprimer cet enseignant ?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        Supprimer
+                                                    </button>
+                                                </form>
+                                            </td>
                                             <td>
                                                 <div class="flex items-center justify-between">
-                                                    <a href="#">
-                                                        <i class="text-success ki-filled ki-shield-tick"></i>
-                                                    </a>
-                                                    <a class="hover:text-primary cursor-pointer" href="#"
-                                                       data-modal-toggle="#teacher-modal">
+                                                    <a href="#"><i class="text-success ki-filled ki-shield-tick"></i></a>
+                                                    <a class="hover:text-primary cursor-pointer" href="#" data-modal-toggle="#teacher-modal">
                                                         <i class="ki-filled ki-cursor"></i>
                                                     </a>
                                                 </div>
@@ -98,20 +97,49 @@
                 </div>
             </div>
         </div>
+
+        <!-- Formulaire -->
         <div class="lg:col-span-1">
             <div class="card h-full">
                 <div class="card-header">
-                    <h3 class="card-title">
-                        Ajouter un Enseignant
-                    </h3>
+                    <h3 class="card-title">Ajouter un Enseignant</h3>
                 </div>
                 <div class="card-body flex flex-col gap-5">
-                    <!-- Formulaire à créer -->
-                    @include('pages.teachers.teacher-modal')
+                    <form method="POST" action="{{ route('teachers.store') }}" class="flex flex-col gap-4">
+                        @csrf
+
+                        <!-- Nom -->
+                        <div class="form-group">
+                            <label for="last_name" class="form-label">Nom</label>
+                            <input type="text" id="last_name" name="last_name" class="input input-sm w-full" placeholder="Dupont">
+                        </div>
+
+                        <!-- Prénom -->
+                        <div class="form-group">
+                            <label for="first_name" class="form-label">Prénom</label>
+                            <input type="text" id="first_name" name="first_name" class="input input-sm w-full" placeholder="Jean">
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="input input-sm w-full" placeholder="jean.dupont@example.com">
+                        </div>
+
+                        <!-- Mot de passe -->
+                        <div class="form-group">
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <input type="password" id="password" name="password" class="input input-sm w-full" placeholder="********">
+                        </div>
+
+                        <!-- Bouton submit -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary w-full">Créer l'enseignant</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
     <!-- end: grid -->
 </x-app-layout>
-<script src="{{ asset('js/custom/modal-teacher.js') }}"></script>
