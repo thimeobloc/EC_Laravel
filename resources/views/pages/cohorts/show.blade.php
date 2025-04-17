@@ -9,10 +9,10 @@
     <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch">
         <div class="lg:col-span-2">
             <div class="grid">
-                <!-- Etudiants (Catégorie 1) -->
+                <!-- Students (Category 1) -->
                 <div class="card card-grid h-full min-w-full">
                     <div class="card-header">
-                        <h3 class="card-title">Étudiants</h3>
+                        <h3 class="card-title">Etudiant</h3>
                     </div>
                     <div class="card-body">
                         <div data-datatable="true" data-datatable-page-size="30">
@@ -22,19 +22,19 @@
                                     <tr>
                                         <th class="min-w-[135px]">
                                             <span class="sort asc">
-                                                 <span class="sort-label">Nom</span>
+                                                 <span class="sort-label">prenom</span>
                                                  <span class="sort-icon"></span>
                                             </span>
                                         </th>
                                         <th class="min-w-[135px]">
                                             <span class="sort">
-                                                <span class="sort-label">Prénom</span>
+                                                <span class="sort-label">nom</span>
                                                 <span class="sort-icon"></span>
                                             </span>
                                         </th>
                                         <th class="min-w-[135px]">
                                             <span class="sort">
-                                                <span class="sort-label">Date de naissance</span>
+                                                <span class="sort-label">date anniversaire</span>
                                                 <span class="sort-icon"></span>
                                             </span>
                                         </th>
@@ -42,13 +42,15 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <!-- Loop through the students in the cohort -->
                                     @foreach ($cohort->students as $student)
                                         <tr>
                                             <td>{{ $student->last_name }}</td>
                                             <td>{{ $student->first_name }}</td>
                                             <td>{{ \Carbon\Carbon::parse($student->birth_date)->format('d/m/Y') }}</td>
                                             <td class="cursor-pointer pointer">
-                                                <form action="{{route('cohort.removeUser')}}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur de la promotion ?');">
+                                                <!-- Form to remove a student from the cohort -->
+                                                <form action="{{route('cohort.removeUser')}}" method="POST" onsubmit="return confirm('Are you sure you want to remove this user from the cohort?');">
                                                     @csrf
                                                     <input type="hidden" name="user_id" value="{{$student->id}}">
                                                     <input type="hidden" name="cohort_id" value="{{$cohort->id}}">
@@ -66,10 +68,10 @@
                     </div>
                 </div>
 
-                <!-- Enseignants (Catégorie 2) -->
+                <!-- Teachers (Category 2) -->
                 <div class="card card-grid h-full min-w-full mt-6">
                     <div class="card-header">
-                        <h3 class="card-title">Enseignants</h3>
+                        <h3 class="card-title">profeseur</h3>
                     </div>
                     <div class="card-body">
                         <div data-datatable="true" data-datatable-page-size="30">
@@ -85,13 +87,13 @@
                                         </th>
                                         <th class="min-w-[135px]">
                                             <span class="sort">
-                                                <span class="sort-label">Prénom</span>
+                                                <span class="sort-label">Prenom</span>
                                                 <span class="sort-icon"></span>
                                             </span>
                                         </th>
                                         <th class="min-w-[135px]">
                                             <span class="sort">
-                                                <span class="sort-label">Date de naissance</span>
+                                                <span class="sort-label">date anniversaire</span>
                                                 <span class="sort-icon"></span>
                                             </span>
                                         </th>
@@ -99,13 +101,15 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <!-- Loop through the teachers in the cohort -->
                                     @foreach ($cohort->teachers as $teacher)
                                         <tr>
                                             <td>{{ $teacher->last_name }}</td>
                                             <td>{{ $teacher->first_name }}</td>
                                             <td>{{ \Carbon\Carbon::parse($teacher->birth_date)->format('d/m/Y') }}</td>
                                             <td class="cursor-pointer pointer">
-                                                <form action="{{route('cohort.removeUser')}}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur de la promotion ?');">
+                                                <!-- Form to remove a teacher from the cohort -->
+                                                <form action="{{route('cohort.removeUser')}}" method="POST" onsubmit="return confirm('Are you sure you want to remove this user from the cohort?');">
                                                     @csrf
                                                     <input type="hidden" name="user_id" value="{{$teacher->id}}">
                                                     <input type="hidden" name="cohort_id" value="{{$cohort->id}}">
@@ -126,35 +130,37 @@
             </div>
         </div>
 
-        <!-- Ajout étudiant et enseignant dans le même bloc -->
+        <!-- Add Student and Teacher in the Same Block -->
         <div class="lg:col-span-1">
             <div class="card h-full">
                 <div class="card-header">
                     <h3 class="card-title">
-                        Ajouter un étudiant ou un enseignant à la promotion
+                        Ajouter des membres a la promotion
                     </h3>
                 </div>
                 <div class="card-body flex flex-col gap-5">
+                    <!-- Form to add a student or teacher to the cohort -->
                     <form action="{{ route('cohorts.addUser', $cohort) }}" method="POST">
                         @csrf
-                        <!-- Ajouter un étudiant -->
+                        <!-- Dropdown to add a student -->
                         <x-forms.dropdown name="user_id" :label="__('Etudiant')">
-                            <option value="">{{ __('Aucun') }}</option>
+                            <option value="">{{ __('None') }}</option>
                             @foreach ($students as $student)
                                 <option value="{{ $student->id }}">{{ $student->last_name }} {{ $student->first_name }}</option>
                             @endforeach
                         </x-forms.dropdown>
 
-                        <!-- Ajouter un enseignant -->
-                        <x-forms.dropdown name="teacher_id" :label="__('Enseignant')">
-                            <option value="">{{ __('Aucun') }}</option>
+                        <!-- Dropdown to add a teacher -->
+                        <x-forms.dropdown name="teacher_id" :label="__('professeur')">
+                            <option value="">{{ __('None') }}</option>
                             @foreach ($teachers as $teacher)
                                 <option value="{{ $teacher->id }}">{{ $teacher->last_name }} {{ $teacher->first_name }}</option>
                             @endforeach
                         </x-forms.dropdown>
 
+                        <!-- Submit Button -->
                         <x-forms.primary-button>
-                            {{ __('Valider') }}
+                            {{ __('Ajouter') }}
                         </x-forms.primary-button>
                     </form>
 
