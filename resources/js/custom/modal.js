@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     })
                     .catch(error => {
-                        console.error('AJAX error:', error); // Log the error to the console
+                        console.error('AJAX error:', error);
                         modalBody.innerHTML = '<p class="error">An error occurred, please try again later.</p>'; // Display a generic error message
                     });
             }
