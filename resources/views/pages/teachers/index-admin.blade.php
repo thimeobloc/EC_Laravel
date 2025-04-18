@@ -3,12 +3,12 @@
     <x-slot name="header">
         <h1 class="flex items-center gap-1 text-sm font-normal">
             <span class="text-gray-700">
-                {{ __('Enseignants') }} <!-- Page title: Teachers -->
+                {{ __('Enseignants') }}
             </span>
         </h1>
     </x-slot>
 
-    <!-- begin: main grid layout -->
+
     <div class="grid lg:grid-cols-3 gap-5 lg:gap-7.5 items-stretch">
 
         <!-- Left column: teachers list -->

@@ -42,7 +42,7 @@ class StudentController extends Controller
         return response()->json($student);
     }
 
-    // Returns a user's information in JSON format (for forms, etc.)
+    // Returns a user's information in JSON format
     public function getForm(User $user)
     {
         $dom = view('pages.students.student-form-update', [

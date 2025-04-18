@@ -110,7 +110,7 @@
             <div class="card h-full">
                 <div class="card-header">
                     <h3 class="card-title">
-                        Ajouter un étudiant <!-- Card title: Add a student -->
+                        Ajouter un étudiant
                     </h3>
                 </div>
                 <div class="card-body flex flex-col gap-5">
@@ -123,5 +123,4 @@
     <!-- end: main grid layout -->
 </x-app-layout>
 
-<!-- Include modal for student form -->
 @include('pages.students.student-modal')
