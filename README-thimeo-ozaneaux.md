@@ -89,7 +89,6 @@ L'ajout d'un étudiant à une promotion ne fonctionne pas correctement.
 - Possibilité de supprimer une cohorte ainsi que de supprimer des étudiants et des professeurs de la cohorte.  
 
 **Problèmes rencontrés** :
-- L'édition des informations des cohortes n'a pas été réalisée.
 - L'implémentation d'AJAX pour la mise à jour dynamique n'a pas été réussie.
 
 ### Story 5 : Gestion des enseignants ⚠️  
@@ -99,7 +98,7 @@ L'ajout d'un étudiant à une promotion ne fonctionne pas correctement.
 - Possibilité de créer et supprimer un enseignant.  
 
 **Problèmes rencontrés** :
-- L'édition des enseignants n'a pas été implémentée.
+- bug modal. 
 - Pas d'AJAX pour gérer dynamiquement les enseignants.
 
 ### Story 6 : Gestion des mots de passe ⏳  
