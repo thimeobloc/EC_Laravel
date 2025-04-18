@@ -16,7 +16,7 @@
                     <li><strong>Etudiant:</strong> {{ $cohort->students()->count() }}</li>
                     <li><strong>professeur:</strong> {{ $cohort->teachers()->count() }}</li>
                 </ul>
-                <a href="{{ route('cohorts.show', $cohort) }}" class="mt-3 inline-block text-sm text-primary hover:underline">voir plus</a>
+                <a href="{{ route('cohort.show', $cohort) }}" class="mt-3 inline-block text-sm text-primary hover:underline">voir plus</a>
 
                 <form action="{{ route('cohorts.destroy', $cohort) }}" method="POST" class="mt-3 inline-block">
                     @csrf

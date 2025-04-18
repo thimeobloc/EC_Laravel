@@ -9,108 +9,45 @@ use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
 {
-
+    // Displays the list of teachers based on the user's role
     public function index()
     {
-        if (!auth()->check()) {
-            return redirect()->route('login');
+        $user = auth()->user();
+        $role = $user->school()->pivot->role;
+
+        if ($role === 'admin') {
+            return $this->adminIndex(); // View for the admin
+        } elseif ($role === 'teacher') {
+            return $this->teacherIndex(); // View for the teacher (not defined here)
+        } else {
+            abort(403, "Access denied."); // Access forbidden for other roles
         }
-
-        $userRole = auth()->user()->school()->pivot->role;
-
-        if ($userRole == 'admin') {
-            return $this->adminIndex();
-        }
-
-        return redirect()->route('home');
     }
 
-
+    // Retrieves and displays all teachers for an admin
     private function adminIndex()
     {
-        $teachers = User::whereIn('id', UserSchool::where('role', 'teacher')->pluck('user_id'))->get();
+        $teachers = User::whereIn('id', UserSchool::where('role', 'teacher')->pluck('user_id'))
+            ->with('cohorts') // Loads the associated cohorts to avoid multiple queries
+            ->get();
 
         return view('pages.teachers.index-admin', [
             'teachers' => $teachers,
         ]);
     }
 
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'last_name' => 'required|string|max:255',
-            'first_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'birth_date' => 'nullable|date',
-            'password' => 'required|string|min:6',
-        ]);
-
-        $user = User::create([
-            'last_name' => $request->last_name,
-            'first_name' => $request->first_name,
-            'email' => $request->email,
-            'birth_date' => $request->birth_date,
-            'password' => Hash::make($request->password),
-        ]);
-
-        UserSchool::create([
-            'user_id' => $user->id,
-            'school_id' => auth()->user()->school()->id,
-            'role' => 'teacher',
-        ]);
-
-        return redirect()->back()->with('success', 'Enseignant créé avec succès.');
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'last_name' => 'required|string|max:255',
-            'first_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|string|min:6',
-        ]);
-
-        $teacher = User::findOrFail($id);
-
-        $teacher->last_name = $request->last_name;
-        $teacher->first_name = $request->first_name;
-        $teacher->email = $request->email;
-
-        if ($request->filled('password')) {
-            $teacher->password = Hash::make($request->password);
-        }
-
-        $teacher->save();
-
-        return redirect()->back()->with('success', 'Enseignant mis à jour avec succès.');
-    }
-
-
-    public function destroy($id)
-    {
-        $teacher = User::findOrFail($id);
-
-        UserSchool::where('user_id', $teacher->id)->delete();
-        $teacher->delete();
-
-        return redirect()->back()->with('success', 'Enseignant supprimé avec succès.');
-    }
-
-
+    // Displays a teacher's information in JSON format based on their ID
     public function show($id)
     {
         $teacher = User::findOrFail($id);
         return response()->json($teacher);
     }
 
-
+    // Returns a teacher's information in JSON format (for forms, etc.)
     public function getForm(User $user)
     {
-        $dom = view('pages.teachers.teacher-form', [
-            'teacherRoute' => route('teachers.update', $user),
+        $dom = view('pages.teachers.teacher-form-update', [
+            'teacherRoute' => route('teacher.update', $user),
             'user' => $user
         ])->render();
 
@@ -119,5 +56,53 @@ class TeacherController extends Controller
             'message' => 'Data retrieved successfully',
             'dom' => $dom
         ]);
+    }
+
+    // Updates a teacher's data
+    public function update(User $user, Request $request)
+    {
+        $user->update($request->all());
+
+        return redirect()->back();
+    }
+
+    // Creates a new teacher and adds to the user_schools table
+    public function store(Request $request)
+    {
+        // Data validation
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+        ]);
+
+
+        // Create the user with the given password
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'password' => bcrypt('12345678'),
+        ]);
+
+        // Add the user to the user_schools table with the role "teacher"
+        UserSchool::create([
+            'user_id' => $user->id,  // ID of the created user
+            'school_id' => 1,        // Ensure the school_id is correct
+            'role' => 'teacher',     // Assign the "teacher" role
+        ]);
+
+        // Return a response or redirect after creation
+        return redirect()->route('teachers.index')->with('success', 'Enseignant ajouté avec succès.');
+    }
+
+    // Deletes a teacher based on their ID
+    public function destroy($id)
+    {
+        $teacher = User::findOrFail($id);
+        UserSchool::where('user_id', $teacher->id)->delete(); // Remove from user_schools
+        $teacher->delete();
+
+        return redirect()->route('teachers.index')->with('success', 'Enseignant supprimé avec succès.');
     }
 }
