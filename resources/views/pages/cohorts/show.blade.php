@@ -140,6 +140,7 @@
                 </div>
                 <div class="card-body flex flex-col gap-5">
                     <!-- Form to add a student or teacher to the cohort -->
+                    <!-- Form to add a student or teacher to the cohort -->
                     <form action="{{ route('cohorts.addUser', $cohort) }}" method="POST">
                         @csrf
                         <!-- Dropdown to add a student -->
@@ -151,7 +152,7 @@
                         </x-forms.dropdown>
 
                         <!-- Dropdown to add a teacher -->
-                        <x-forms.dropdown name="teacher_id" :label="__('professeur')">
+                        <x-forms.dropdown name="teacher_id" :label="__('Professeur')">
                             <option value="">{{ __('None') }}</option>
                             @foreach ($teachers as $teacher)
                                 <option value="{{ $teacher->id }}">{{ $teacher->last_name }} {{ $teacher->first_name }}</option>
@@ -163,7 +164,6 @@
                             {{ __('Ajouter') }}
                         </x-forms.primary-button>
                     </form>
-
                 </div>
             </div>
         </div>

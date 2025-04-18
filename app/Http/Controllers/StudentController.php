@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\UserSchool;
 use Illuminate\Http\Request;
-use function Termwind\render;
 
 class StudentController extends Controller
 {
@@ -16,19 +15,19 @@ class StudentController extends Controller
         $role = $user->school()->pivot->role;
 
         if ($role === 'admin') {
-            return $this->adminIndex(); // Show the admin view
+            return $this->adminIndex(); // View for the admin
         } elseif ($role === 'teacher') {
-            return $this->teacherIndex(); // Show the teacher view (not implemented here)
+            return $this->teacherIndex(); // View for the teacher (not defined here)
         } else {
-            abort(403, "Access denied."); // Deny access for other roles
+            abort(403, "Access denied."); // Access forbidden for other roles
         }
     }
 
-    // Retrieves and displays all students for the admin
+    // Retrieves and displays all students for an admin
     private function adminIndex()
     {
         $students = User::whereIn('id', UserSchool::where('role', 'student')->pluck('user_id'))
-            ->with('cohorts') // Eager-load associated cohorts to optimize queries
+            ->with('cohorts') // Loads the associated cohorts to avoid multiple queries
             ->get();
 
         return view('pages.students.index-admin', [
@@ -36,14 +35,14 @@ class StudentController extends Controller
         ]);
     }
 
-    // Returns the student data in JSON format based on the given ID
+    // Displays a student's information in JSON format based on their ID
     public function show($id)
     {
         $student = User::findOrFail($id);
         return response()->json($student);
     }
 
-    // Loads and returns the student edit form as HTML (used in modals)
+    // Returns a user's information in JSON format (for forms, etc.)
     public function getForm(User $user)
     {
         $dom = view('pages.students.student-form-update', [
@@ -58,7 +57,7 @@ class StudentController extends Controller
         ]);
     }
 
-    // Updates student information based on submitted data
+    // Updates a student's data
     public function update(User $user, Request $request)
     {
         $user->update($request->all());
@@ -66,43 +65,42 @@ class StudentController extends Controller
         return redirect()->back();
     }
 
-    // Stores a new student and links them to the school
+    // Creates a new student and adds to the user_schools table
     public function store(Request $request)
     {
-        // Validate the incoming data
+        // Data validation
         $request->validate([
-            'first_name'  => 'required|string|max:255',
-            'last_name'   => 'required|string|max:255',
-            'email'       => 'required|email|unique:users,email',
-            'birth_date'  => 'required|date',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'birth_date' => 'required|date',
         ]);
 
         // Create the user with a default password
         $user = User::create([
             'first_name' => $request->first_name,
-            'last_name'  => $request->last_name,
-            'email'      => $request->email,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
             'birth_date' => $request->birth_date,
-            'password'   => bcrypt('12345678'), // Default password
+            'password' => bcrypt('12345678'), // Default password
         ]);
 
-        // Link the user to the school with the "student" role
+        // Add the user to the user_schools table with the role "student"
         UserSchool::create([
-            'user_id'   => $user->id,
-            'school_id' => 1, // Ensure this is the correct school_id
-            'role'      => 'student',
+            'user_id' => $user->id,  // ID of the created user
+            'school_id' => 1,        // Ensure the school_id is correct
+            'role' => 'student',     // Assign the "student" role
         ]);
 
-        // Redirect after successful creation
-        return redirect()->route('student.index')->with('success', 'Student successfully added.');
+        // Return a response or redirect after creation
+        return redirect()->route('student.index')->with('success', 'Étudiant ajouté avec succès.');
     }
 
-    // Deletes a student by ID
+    // Deletes a student based on their ID
     public function destroy($id)
     {
         $student = User::findOrFail($id);
         $student->delete();
-
-        return redirect()->route('student.index')->with('success', 'Student successfully deleted.');
+        return redirect()->route('student.index')->with('success', 'Étudiant supprimé avec succès.');
     }
 }
