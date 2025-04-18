@@ -37,13 +37,19 @@ Route::middleware('auth')->group(function () {  // Ensure the user is authentica
         Route::post('/cohorts/{cohort}/add-user', [CohortController::class, 'addUserToCohort'])->name('cohorts.addUser');
 
         // Teacher routes (view, store, delete)
-        Route::get('/teacher',[TeacherController::class, 'index'])->name('teachers');
+        Route::get('/teacher', [TeacherController::class, 'index'])->name('teachers');
         Route::post('/teachers', [TeacherController::class, 'store'])->name('teachers.store');
+        Route::post('/teachers/update/{id}', [TeacherController::class, 'update'])->name('teachers.update'); // update
         Route::delete('/teachers/{id}', [TeacherController::class, 'destroy'])->name('teachers.destroy');
+        Route::get('/teacher/form/{user}', [TeacherController::class, 'getForm'])->name('teacher.form.get'); // getForm
 
         // Student routes (view student list, get form for individual student)
-        Route::get('students', [StudentController::class, 'index'])->name('student.index');
-        Route::get('student/form/{user}', [StudentController::class, 'getForm'])->name('student.form.get');
+        Route::get('students', [StudentController::class, 'index'])->name('student.index'); // Displays the list of students (Admin/Teacher view)
+        Route::post('student/update/{user}', [StudentController::class, 'update'])->name('student.update'); // Updates an individual student's data
+        Route::get('student/form/{user}', [StudentController::class, 'getForm'])->name('student.form.get'); // Retrieves the form for updating a specific student's data
+        Route::post('students/store', [StudentController::class, 'store'])->name('students.store'); // Creates a new student (stores data)
+        Route::delete('student/delete/{id}', [StudentController::class, 'destroy'])->name('student.delete'); // Deletes a student by their ID
+
 
         // Knowledge routes (view knowledge base)
         Route::get('knowledge', [KnowledgeController::class, 'index'])->name('knowledge.index');

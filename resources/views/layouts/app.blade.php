@@ -87,7 +87,6 @@
 <script src="{{ asset('metronic/vendors/apexcharts/apexcharts.min.js') }}"></script>
 <script src="{{ asset('metronic/js/widgets/general.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('resources/js/custom/modal.js') }}"></script>
 
 <!-- End of Scripts -->
 </body>

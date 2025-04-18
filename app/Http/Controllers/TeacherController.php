@@ -9,102 +9,115 @@ use Illuminate\Support\Facades\Hash;
 
 class TeacherController extends Controller
 {
-    // Display the index page based on the user's role
+
     public function index()
     {
         if (!auth()->check()) {
-            return redirect()->route('login');  // Redirect to login if user is not authenticated
+            return redirect()->route('login');
         }
 
-        $userRole = auth()->user()->school()->pivot->role;  // Retrieve the role of the authenticated user
+        $userRole = auth()->user()->school()->pivot->role;
 
         if ($userRole == 'admin') {
-            return $this->adminIndex();  // Show the admin index if the user is an admin
+            return $this->adminIndex();
         }
 
-        return redirect()->route('home');  // Redirect to home for non-admin users
+        return redirect()->route('home');
     }
 
-    // Show the admin page with the list of teachers
+
     private function adminIndex()
     {
-        // Fetch the teachers assigned to the current user's school
         $teachers = User::whereIn('id', UserSchool::where('role', 'teacher')->pluck('user_id'))->get();
 
         return view('pages.teachers.index-admin', [
-            'teachers' => $teachers,  // Pass the teachers to the view
+            'teachers' => $teachers,
         ]);
     }
 
-    // Store a new teacher in the database
+
     public function store(Request $request)
     {
-        // Validate the incoming request
         $request->validate([
             'last_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',  // Ensure the email is unique
+            'email' => 'required|email|unique:users,email',
             'birth_date' => 'nullable|date',
-            'password' => 'required|string|min:6',  // Password must be at least 6 characters
+            'password' => 'required|string|min:6',
         ]);
 
-        // Create a new user (teacher) and save it to the database
         $user = User::create([
             'last_name' => $request->last_name,
             'first_name' => $request->first_name,
             'email' => $request->email,
             'birth_date' => $request->birth_date,
-            'password' => Hash::make($request->password),  // Encrypt the password
+            'password' => Hash::make($request->password),
         ]);
 
-        // Associate the user with the school as a teacher
         UserSchool::create([
             'user_id' => $user->id,
-            'school_id' => auth()->user()->school()->id,  // Link the user to the authenticated user's school
-            'role' => 'teacher',  // Set the role to teacher
+            'school_id' => auth()->user()->school()->id,
+            'role' => 'teacher',
         ]);
 
-        return redirect()->back()->with('success', 'Enseignant créé avec succès.');  // Redirect with success message
+        return redirect()->back()->with('success', 'Enseignant créé avec succès.');
     }
 
-    // Update an existing teacher's information
+
     public function update(Request $request, $id)
     {
-        // Validate the incoming request
         $request->validate([
             'last_name' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,  // Ensure email is unique except for the current teacher
-            'password' => 'nullable|string|min:6',  // Password is optional for update
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:6',
         ]);
 
-        $teacher = User::findOrFail($id);  // Find the teacher by ID or fail if not found
+        $teacher = User::findOrFail($id);
 
-        // Update the teacher's details
         $teacher->last_name = $request->last_name;
         $teacher->first_name = $request->first_name;
         $teacher->email = $request->email;
 
-        // If a new password is provided, update it
         if ($request->filled('password')) {
             $teacher->password = Hash::make($request->password);
         }
 
-        $teacher->save();  // Save the updated teacher information
+        $teacher->save();
 
-        return redirect()->back()->with('success', 'Enseignant mis à jour avec succès.');  // Redirect with success message
+        return redirect()->back()->with('success', 'Enseignant mis à jour avec succès.');
     }
 
-    // Delete a teacher from the database
+
     public function destroy($id)
     {
-        $teacher = User::findOrFail($id);  // Find the teacher by ID or fail if not found
+        $teacher = User::findOrFail($id);
 
-        // Delete the teacher's association with the school
         UserSchool::where('user_id', $teacher->id)->delete();
+        $teacher->delete();
 
-        $teacher->delete();  // Delete the teacher from the database
+        return redirect()->back()->with('success', 'Enseignant supprimé avec succès.');
+    }
 
-        return redirect()->back()->with('success', 'Enseignant supprimé avec succès.');  // Redirect with success message
+
+    public function show($id)
+    {
+        $teacher = User::findOrFail($id);
+        return response()->json($teacher);
+    }
+
+
+    public function getForm(User $user)
+    {
+        $dom = view('pages.teachers.teacher-form', [
+            'teacherRoute' => route('teachers.update', $user),
+            'user' => $user
+        ])->render();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data retrieved successfully',
+            'dom' => $dom
+        ]);
     }
 }
